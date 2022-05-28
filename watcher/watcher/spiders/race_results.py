@@ -1,5 +1,3 @@
-from tracemalloc import start
-from turtle import title
 import scrapy
 
 class ResultsSpider(scrapy.Spider):
@@ -10,8 +8,14 @@ class ResultsSpider(scrapy.Spider):
 
 
     def parse(self, response):
-        title = response.css('title::text').extract()
+        title = response.css('title').extract_first()
+        table_header = response.css('div.resultsarchive-wrapper').css('.resultsarchive-table tr th::text').extract()
+        race_results = response.css('div.resultsarchive-wrapper').css('.resultsarchive-table tr td::text').extract()
+        
+        
         yield  {
-            'titletext':title
+            'titletext':title,
+            'tableheader':table_header,
+            'results': race_results
         }
 
