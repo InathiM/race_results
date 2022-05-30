@@ -1,4 +1,5 @@
 import scrapy
+import pandas as pd
 
 class ResultsSpider(scrapy.Spider):
     name = 'results'
@@ -8,10 +9,23 @@ class ResultsSpider(scrapy.Spider):
 
 
     def parse(self, response):
-        title = response.css('title').extract_first()
-        table_header = response.css('div.resultsarchive-wrapper').css('.resultsarchive-table tr th::text').extract()
-        race_results = response.css('div.resultsarchive-wrapper').css('.resultsarchive-table tr td::text').extract()
+        #Get page tittle
+        title = str((response.xpath('//title/text()').extract_first())).strip('\n')     
         
+        #Create DataFrame and give it column names
+        table_header = response.css('.resultsarchive-table tr th::text').extract()
+        data = pd.DataFrame(columns = table_header)
+
+        #Get Race Results
+        race_results = str(response.css('.resultsarchive-table tr td::text').extract())
+        # raceresults = pd.DataFrame(race_results)
+        raceresults = pd.DataFrame(race_results)
+
+        
+# row_format ="{:>15}" * (len(teams_list) + 1)
+# print(row_format.format("", *teams_list))
+# for team, row in zip(teams_list, data):
+#     print(row_format.format(team, *row))        
         
         yield  {
             'titletext':title,
