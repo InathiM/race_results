@@ -18,6 +18,7 @@ class ResultsSpider(scrapy.Spider):
 
         #Get Race Results
         race_results = str(response.css('.resultsarchive-table tr td::text').extract())
+        
         # raceresults = pd.DataFrame(race_results)
         raceresults = pd.DataFrame(race_results)
 
